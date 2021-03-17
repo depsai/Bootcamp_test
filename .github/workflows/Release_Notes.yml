@@ -32,3 +32,11 @@ jobs:
                 body: ${{ steps.extract_release_notes.outputs.release_notes }}
                 draft: false
                 prerelease: false
+            – name: Slack notify
+              uses: rtCamp/action-slack-notify@master
+              env:
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_OVER_APP }}
+                SLACK_CHANNEL: #over-app-android
+                SLACK_TITLE: 🚨 Version ${{ env.VERSION_NAME }} is being published to Google Play Internal Test
+                SLACK_MESSAGE: ${{ steps.extract_release_notes.outputs.release_notes }}
+                MSG_MINIMAL: true
