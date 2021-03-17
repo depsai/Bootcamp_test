@@ -68,7 +68,7 @@ public class TestMessageService {
 
 		MessageService ms = new MessageService();
 
-		Assertions.assertEquals("Hello jenkins Users!!!", ms.soft_jenkins());
+		Assertions.assertEquals("Hello welcome jenkins Users!!!", ms.soft_jenkins());
 
 	}
 
