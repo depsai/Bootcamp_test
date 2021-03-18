@@ -1,30 +1,25 @@
-name: Create Release
+name: Release Drafter
 
 on:
   push:
-    branches: [ master ]
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - master
 
 jobs:
-  build:
-    name: Create Release
+  update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Changelog
-        uses: scottbrenner/generate-changelog-action@master
-        id: Changelog
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
+      # (Optional) GitHub Enterprise requires GHE_HOST variable set
+      #- name: Set GHE_HOST
+      #  run: |
+      #    echo "GHE_HOST=${GITHUB_SERVER_URL##https:\/\/}" >> $GITHUB_ENV
+
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: release-drafter/release-drafter@v5
+        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+        # with:
+        #   config-name: my-config.yml
+        #   disable-autolabeler: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ${{ steps.Changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
