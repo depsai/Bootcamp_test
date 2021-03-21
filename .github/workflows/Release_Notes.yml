@@ -1,18 +1,21 @@
-on:
-  push:
-   branches: [ master ]
+name: Release-Notes-Preview
 
-name: Create Release
+on:
+  pull_request:
+    branches: [ master ]
+  issue_comment:
+    types: [ edited ]
 
 jobs:
-  build:
-    name: Create Release
+  preview:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: mikepenz/release-changelog-builder-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+    - uses: actions/checkout@v2
+    - run: |
+        git fetch --prune --unshallow --tags
+    - uses: snyk/release-notes-preview@v1.6.1
+      with:
+        releaseBranch: master
+      env:
+        GITHUB_PR_USERNAME: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
